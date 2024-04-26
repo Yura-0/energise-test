@@ -2,21 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-
 class TimerPage extends StatefulWidget {
-  const TimerPage({super.key});
+  const TimerPage({Key? key}) : super(key: key);
 
   @override
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMixin {
+class _TimerPageState extends State<TimerPage>
+    with TickerProviderStateMixin {
   bool isPlaying = false;
   Duration _duration = const Duration();
   Timer? _timer;
   late AnimationController _animationController;
+  late AnimationController _animationTextController;
   late Animation<double> _scaleAnimation;
-
+  late Animation<double> _textScaleAnimation;
   @override
   void initState() {
     super.initState();
@@ -25,9 +26,20 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       duration: const Duration(milliseconds: 500),
       reverseDuration: const Duration(milliseconds: 500),
     );
+     _animationTextController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+      reverseDuration: const Duration(milliseconds: 550),
+    );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(
         parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _textScaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(
+        parent: _animationTextController,
         curve: Curves.easeInOut,
       ),
     );
@@ -37,6 +49,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   @override
   void dispose() {
     _animationController.dispose();
+    _animationTextController.dispose();
     _timer?.cancel();
     super.dispose();
   }
@@ -46,24 +59,25 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       isPlaying = !isPlaying;
       if (isPlaying) {
         _startTimer();
-         _animationController.stop();
+        _animationController.stop();
+        _animationTextController.repeat();
       } else {
         _stopTimer();
         _animationController.repeat(reverse: true);
-       
+        _animationTextController.stop();
       }
     });
   }
 
- void _startTimer() {
-  _timer?.cancel();
-  _duration = const Duration();
-  _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-    setState(() {
-      _duration += const Duration(seconds: 1);
+  void _startTimer() {
+    _timer?.cancel();
+    _duration = const Duration();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _duration += const Duration(seconds: 1);
+      });
     });
-  });
-}
+  }
 
   void _stopTimer() {
     _timer?.cancel();
@@ -77,11 +91,14 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                '${_duration.inHours.toString().padLeft(2, '0')}:${(_duration.inMinutes % 60).toString().padLeft(2, '0')}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                style: const TextStyle(fontSize: 24.0),
+              ScaleTransition(
+                scale: _textScaleAnimation,
+                child: Text(
+                  '${_duration.inHours.toString().padLeft(2, '0')}:${(_duration.inMinutes % 60).toString().padLeft(2, '0')}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 24.0),
+                ),
               ),
-               const SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ScaleTransition(
                 scale: _scaleAnimation,
                 child: Container(
