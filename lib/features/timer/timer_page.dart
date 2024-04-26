@@ -9,8 +9,7 @@ class TimerPage extends StatefulWidget {
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage>
-    with TickerProviderStateMixin {
+class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   bool isPlaying = false;
   Duration _duration = const Duration();
   Timer? _timer;
@@ -26,10 +25,10 @@ class _TimerPageState extends State<TimerPage>
       duration: const Duration(milliseconds: 500),
       reverseDuration: const Duration(milliseconds: 500),
     );
-     _animationTextController = AnimationController(
+    _animationTextController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 550),
-      reverseDuration: const Duration(milliseconds: 550),
+      duration: const Duration(milliseconds: 1000),
+      reverseDuration: const Duration(milliseconds: 1000),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(
@@ -89,33 +88,32 @@ class _TimerPageState extends State<TimerPage>
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ScaleTransition(
                 scale: _textScaleAnimation,
                 child: Text(
                   '${_duration.inHours.toString().padLeft(2, '0')}:${(_duration.inMinutes % 60).toString().padLeft(2, '0')}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                  style: const TextStyle(fontSize: 24.0),
+                  style: const TextStyle(fontSize: 40.0),
                 ),
               ),
-              const SizedBox(height: 20.0),
               ScaleTransition(
                 scale: _scaleAnimation,
-                child: Container(
-                  width: 70.0,
-                  height: 70.0,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                  ),
-                  child: Center(
-                    child: IconButton(
-                      icon: Icon(
+                child: GestureDetector(
+                  onTap: _togglePlayPause,
+                  child: Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                    ),
+                    child: Center(
+                      child: Icon(
                         isPlaying ? Icons.pause : Icons.play_arrow,
                         size: 50.0,
                         color: Colors.white,
                       ),
-                      onPressed: _togglePlayPause,
                     ),
                   ),
                 ),
