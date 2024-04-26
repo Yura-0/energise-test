@@ -1,4 +1,6 @@
 {
-    "@@locale": "de"
-   
+    "@@locale": "de",
+    "timer": "Timer",
+    "location": "Standort",
+    "settings": "Einstellungen"
 }

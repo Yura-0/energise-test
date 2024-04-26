@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'features/home/home_page.dart';
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -9,11 +11,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      home: HomePage(),
     );
   }
 }

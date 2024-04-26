@@ -1,3 +1,6 @@
 {
-  "@@locale": "en"
+  "@@locale": "en",
+  "timer": "Timer",
+  "location": "Location",
+  "settings": "Settings"
 }
